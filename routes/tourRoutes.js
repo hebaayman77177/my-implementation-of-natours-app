@@ -6,7 +6,7 @@ const reviewRouter = require("./reviewRoutes");
 const router = express.Router();
 // router.use(tourController.mainMiddleware);
 
-router.use("/:tour-id/reviews", reviewRouter);
+router.use("/:tourId/reviews", reviewRouter);
 router
   .route("/top-cheap-5")
   .get(tourController.aliasTopTours, tourController.getTours);
@@ -14,7 +14,6 @@ router
   .route("/")
   .get(tourController.getTours)
   .post(tourController.postTours);
-
 router
   .route("/:id")
   .get(tourController.getTour)

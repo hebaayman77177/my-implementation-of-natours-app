@@ -2,10 +2,10 @@ const ApiFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
-exports.getDocsFactory = Model => {
+exports.getDocsFactory = (Model, sarterFilter = {}) => {
   return catchAsync(async (req, res, next) => {
     console.log(req.query);
-    const apiFeatures = new ApiFeatures(Model.find(), req.query);
+    const apiFeatures = new ApiFeatures(Model.find(sarterFilter), req.query);
     const docs = await apiFeatures
       .filter()
       .sort()

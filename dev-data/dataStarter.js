@@ -2,15 +2,22 @@ const fs = require("fs");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const Tour = require("./../models/tourModel");
+const User = require("./../models/userModel");
 
 dotenv.config({ path: `./env.env` });
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/data/tours-simple.json`, "utf-8")
+  fs.readFileSync(
+    `${__dirname}/data/${
+      process.argv[4] ? process.argv[4] : "tours-simple.json"
+    }`,
+    "utf-8"
+  )
 );
 const importData = async () => {
   try {
     console.log("start uploade");
-    await Tour.create(tours);
+    if (process.argv[3] === "Tour") await Tour.create(tours);
+    if (process.argv[3] === "User") await User.create(tours);
     console.log("Data successfully loaded!");
   } catch (err) {
     console.log(err);

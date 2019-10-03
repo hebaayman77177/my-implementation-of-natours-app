@@ -1,7 +1,7 @@
 const funFactory = require("./controllerFunctionsFactory");
 const Tour = require("../models/tourModel");
-const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/appError");
+// const catchAsync = require("../utils/catchAsync");
+// const AppError = require("../utils/appError");
 
 // exports.mainMiddleware = (req, res, next) => {
 //   console.log("you requested tour router");
@@ -25,5 +25,5 @@ exports.aliasTopTours = (req, res, next) => {
 exports.getTours = funFactory.getDocsFactory(Tour);
 exports.postTours = funFactory.addDocFactory(Tour);
 exports.getTour = funFactory.getDocFactory(Tour);
-exports.editTour = funFactory.editDocsFactory(Tour);
-exports.deleteTour = funFactory.deleteDocsFactory(Tour);
+exports.editTour = funFactory.editDocFactory(Tour);
+exports.deleteTour = funFactory.deleteDocFactory(Tour);

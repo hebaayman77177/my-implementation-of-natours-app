@@ -116,7 +116,7 @@ const tourSchema = new mongoose.Schema(
     guides: [
       {
         type: mongoose.Schema.ObjectId,
-        reference: "User"
+        ref: "User"
       }
     ]
   },
@@ -132,14 +132,21 @@ tourSchema.pre("save", function(next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
-tourSchema.pre("/^find/", function(next) {
+tourSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: "guides",
+    select: "-__v -passwordChangedAt -role -active"
+  });
+  next();
+});
+tourSchema.pre(/^find/, function(next) {
   this.find({ secretTour: { $ne: true } });
   this.startQuery = Date.now();
   next();
 });
-tourSchema.post("/^find/", function(next) {
-  console.log(`the query took ${Date.now() - this.startQuery} milliseconds`);
-  next();
-});
-const Tour = mongoose.model("tour", tourSchema);
+// tourSchema.post(/^find/, function(doc, next) {
+//   console.log(`the query took ${Date.now() - this.startQuery} milliseconds`);
+//   next();
+// });
+const Tour = mongoose.model("Tour", tourSchema);
 module.exports = Tour;
