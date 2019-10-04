@@ -29,9 +29,12 @@ exports.addDocFactory = Model => {
     });
   });
 };
-exports.getDocFactory = Model => {
+exports.getDocFactory = (Model, populate) => {
   return catchAsync(async (req, res, next) => {
-    const doc = await Model.findById(req.params.id);
+    let query = Model.findById(req.params.id);
+    if (populate !== undefined) query = query.populate(populate);
+
+    const doc = await query;
     if (!doc) {
       const err = new AppError(
         `this id ${req.params.id} doesn't exist :(`,

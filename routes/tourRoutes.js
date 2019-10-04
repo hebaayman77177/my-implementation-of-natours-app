@@ -13,14 +13,22 @@ router
 router
   .route("/")
   .get(tourController.getTours)
-  .post(tourController.postTours);
+  .post(
+    authController.authMiddleware,
+    authController.checkRole("admin", "tour-guide"),
+    tourController.postTours
+  );
 router
   .route("/:id")
   .get(tourController.getTour)
   .patch(
     authController.authMiddleware,
-    authController.checkRole("admin"),
+    authController.checkRole("admin", "tour-guide"),
     tourController.editTour
   )
-  .delete(tourController.deleteTour);
+  .delete(
+    authController.authMiddleware,
+    authController.checkRole("admin", "tour-guide"),
+    tourController.deleteTour
+  );
 module.exports = router;

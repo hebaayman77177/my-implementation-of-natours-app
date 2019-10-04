@@ -24,6 +24,8 @@ exports.aliasTopTours = (req, res, next) => {
 // };
 exports.getTours = funFactory.getDocsFactory(Tour);
 exports.postTours = funFactory.addDocFactory(Tour);
-exports.getTour = funFactory.getDocFactory(Tour);
+exports.getTour = funFactory.getDocFactory(Tour, {
+  path: "reviews"
+});
 exports.editTour = funFactory.editDocFactory(Tour);
 exports.deleteTour = funFactory.deleteDocFactory(Tour);

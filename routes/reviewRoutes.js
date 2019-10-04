@@ -4,11 +4,12 @@ const authController = require("../controllers/authController");
 
 const router = express.Router({ mergeParams: true });
 
+router.use(authController.authMiddleware);
+
 router
   .route("/")
   .get(reviewController.getReviews)
   .post(
-    authController.authMiddleware,
     authController.checkRole("user"),
     reviewController.mainMiddleware,
     reviewController.addReview
@@ -16,14 +17,9 @@ router
 router
   .route("/:id")
   .get(reviewController.getReview)
-  .patch(
-    authController.authMiddleware,
-    authController.checkRole("user"),
-    reviewController.editReview
-  )
+  .patch(authController.checkRole("user"), reviewController.editReview)
   .delete(
-    authController.authMiddleware,
-    authController.checkRole("user"),
+    authController.checkRole("user", "admin"),
     reviewController.deleteReview
   );
 module.exports = router;

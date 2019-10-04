@@ -1,7 +1,8 @@
 const User = require("../models/userModel");
 const ApiFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/appError");
+// const AppError = require("../utils/appError");
+const funFactory = require("./controllerFunctionsFactory");
 
 function filterFields(object, fields) {
   const obj = {};
@@ -14,14 +15,16 @@ function filterFields(object, fields) {
   });
   return obj;
 }
-
+exports.putMe = (req, res, next) => {
+  req.params.id = req.currentUser._id;
+  next();
+};
 exports.editMe = catchAsync(async (req, res, next) => {
   //get the user
   const currentUser = await User.findById(req.currentUser._id);
   //filter the edit fields not to edit not allowed fields
   const allowedFields = ["name", "email", "photo"];
   const editObj = filterFields(req.body, allowedFields);
-  console.log(editObj);
   //update the user
   const updatedUser = await User.findByIdAndUpdate(currentUser._id, editObj, {
     validators: true,
@@ -45,47 +48,8 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     data: null
   });
 });
-exports.getUsers = catchAsync(async (req, res, next) => {
-  const apiFeatures = new ApiFeatures(User.find(), req.query);
-  const users = await apiFeatures
-    .filter()
-    .sort()
-    .limit()
-    .paginate().query;
-  // const users = await user.find();
-  return res.status(200).json({
-    status: "succeed",
-    legnth: users.length,
-    data: users
-  });
-});
-exports.postUsers = (req, res) => {
-  return res.status(201).json({
-    status: "succeed",
-    data: req.params.id * 1 //the created data
-  });
-};
-
-exports.getUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
-  if (!user) {
-    const err = new AppError(`this id ${req.params.id} doesn't exist :(`, 404);
-    return next(err);
-  }
-  return res.status(200).json({
-    status: "succeed",
-    data: { user }
-  });
-});
-exports.editUser = (req, res) => {
-  return res.status(200).json({
-    status: "succeed",
-    data: req.params.id * 1
-  });
-};
-exports.deleteUser = (req, res) => {
-  return res.status(204).json({
-    status: "succeed",
-    data: null
-  });
-};
+exports.getUsers = funFactory.getDocsFactory(User);
+exports.postUsers = funFactory.addDocFactory(User);
+exports.getUser = funFactory.getDocFactory(User);
+exports.editUser = funFactory.editDocFactory(User);
+exports.deleteUser = funFactory.deleteDocFactory(User);
