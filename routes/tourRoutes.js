@@ -6,6 +6,16 @@ const reviewRouter = require("./reviewRoutes");
 const router = express.Router();
 // router.use(tourController.mainMiddleware);
 
+router
+  .route("/tours-withn/:distance/center/:latlng/unit/:unit")
+  .get(tourController.getToursWithin);
+router
+  .route("/tours-withn/:distance/center/:latlng")
+  .get(tourController.getToursWithin);
+router
+  .route("/get-distances/center/:latlng/unit/:unit")
+  .get(tourController.getDistances);
+router.route("/get-distances/center/:latlng").get(tourController.getDistances);
 router.use("/:tourId/reviews", reviewRouter);
 router
   .route("/top-cheap-5")
